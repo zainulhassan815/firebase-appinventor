@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dev.dreamerslab.firebase">
 
     <application>
-        <!-- You can use any manifest tag that goes inside the <application> tag -->
-        <!-- <service android:name="com.example.MyService"> ... </service> -->
+        <service android:name="dev.dreamerslab.firebase.MessagingService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
-    <!-- Other than <application> level tags, you can use <uses-permission> & <queries> tags -->
-    <!-- <uses-permission android:name="android.permission.SEND_SMS"/> -->
-    <!-- <queries> ... </queries> -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
 </manifest>
