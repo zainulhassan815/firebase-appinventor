@@ -1,0 +1,12 @@
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Messaging1 'SubscribeToTopic (*list-for-runtime* "e2e-news") '(text)))
+
+(define-event Messaging1 MessageReceived($from $data $title $body)(set-this-form)
+  ((get-var p$report) (string-append "message|" (lexical-value $from) "|" (coerce-to-string (lexical-value $data))))
+  (call-component-method 'Messaging1 'UnsubscribeFromTopic (*list-for-runtime* "e2e-news") '(text)))
+
+(define-event Messaging1 SubscribedToTopic($topic)(set-this-form)
+  ((get-var p$report) (string-append "subscribed " (lexical-value $topic))))
+
+(define-event Messaging1 UnsubscribedFromTopic($topic)(set-this-form)
+  ((get-var p$report) (string-append "unsubscribed " (lexical-value $topic))))

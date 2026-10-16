@@ -1,0 +1,4 @@
+[
+  {"name": "Messaging1", "type": "FirebaseMessaging"},
+  {"name": "Label1", "type": "Label", "properties": {"Text": ""}}
+]

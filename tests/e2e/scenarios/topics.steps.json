@@ -1,0 +1,14 @@
+[
+  {"install": {}},
+  {"launch": {}},
+  {"wait": {"line": "subscribed e2e-news"}},
+  {"send": {"topic": "e2e-news", "data": {"n": "1"}}},
+  {"wait": {"line": "unsubscribed e2e-news"}},
+  {"send": {"topic": "e2e-news", "data": {"n": "2"}}},
+  {"pause": {"seconds": 10}},
+  {"expect": {"lines": [
+    "subscribed e2e-news",
+    "message\\|/topics/e2e-news\\|\\{\"n\":\"1\"\\}",
+    "unsubscribed e2e-news"
+  ]}}
+]

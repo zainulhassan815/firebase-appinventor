@@ -1,0 +1,19 @@
+[
+  {"install": {}},
+  {"launch": {}},
+  {"wait": {"line": "token .+"}},
+  {"send": {"data": {"n": "1"}}},
+  {"wait": {"line": "message\\|.*"}},
+  {"send": {"notification": {"title": "Hello", "body": "From the test"}, "data": {"n": "2"}}},
+  {"wait": {"line": "message\\|.*\"2\".*"}},
+  {"home": {}},
+  {"send": {"data": {"n": "3"}}},
+  {"pause": {"seconds": 5}},
+  {"launch": {}},
+  {"expect": {"lines": [
+    "token .+",
+    "message\\|@SENDER_ID@\\|\\{\"n\":\"1\"\\}\\|\\|",
+    "message\\|@SENDER_ID@\\|\\{\"n\":\"2\"\\}\\|Hello\\|From the test",
+    "message\\|@SENDER_ID@\\|\\{\"n\":\"3\"\\}\\|\\|"
+  ]}}
+]

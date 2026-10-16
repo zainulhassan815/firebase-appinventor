@@ -2,3 +2,6 @@
 /.rush
 /.classpath
 /.idea/libraries/
+/tests/e2e/secrets/
+/.e2e
+__pycache__/

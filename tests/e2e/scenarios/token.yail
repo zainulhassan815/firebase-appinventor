@@ -1,0 +1,2 @@
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Messaging1 'GetToken (*list-for-runtime*) '()))

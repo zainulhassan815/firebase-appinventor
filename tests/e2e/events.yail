@@ -1,0 +1,8 @@
+(define-event Messaging1 GotToken($token)(set-this-form)
+  ((get-var p$report) (string-append "token " (lexical-value $token))))
+
+(define-event Messaging1 TokenDeleted()(set-this-form)
+  ((get-var p$report) "token deleted"))
+
+(define-event Messaging1 Error($operation $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $operation) ": " (lexical-value $message))))
