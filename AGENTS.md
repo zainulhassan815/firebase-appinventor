@@ -27,4 +27,22 @@ and the limits App Inventor imposes.
 
 ## Project notes
 
-Add conventions specific to this project here.
+- Every event goes through `fire`: it posts to the main looper and holds events
+  until `onInitialize`, which App Inventor calls after `Screen.Initialize`.
+  Events fired while `Screen.Initialize` runs are dropped.
+- The notification channel id `notifications` is declared as FCM's default
+  channel in `src/AndroidManifest.xml` and used in `Notifications.kt`. Change
+  both together. The channel is created before every local notification:
+  Android drops notifications posted to a missing channel.
+- `MessagingService` runs without a screen when the app is closed. It only
+  forwards to the active component, so data messages to a closed app are
+  silent, as in standard FCM.
+- Never add blocks that send messages: sending needs the project's service
+  account key, which must not ship in an APK.
+- The `libraries:` entries in `rush.yml` work around rush-cli#86 and #87
+  (Kotlin Multiplatform AndroidX artifacts). Remove them once Rush resolves
+  Gradle module metadata.
+- The AI Companion can't load the Firebase AARs. Test with the device
+  scenarios: `tests/e2e/run.sh tests/e2e/scenarios/<name>.yail`. They need
+  `google-services.json` and a Firebase Admin service account key in
+  `tests/e2e/secrets/`.
