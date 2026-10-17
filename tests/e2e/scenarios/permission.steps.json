@@ -1,0 +1,6 @@
+[
+  {"install": {"grant": false}},
+  {"launch": {}},
+  {"press": {"text": "Allow"}},
+  {"expect": {"lines": ["enabled false", "granted true", "enabled true"]}}
+]

@@ -1,0 +1,5 @@
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Messaging1 'GetToken (*list-for-runtime*) '()))
+
+(define-event Messaging1 NotificationOpened($data)(set-this-form)
+  ((get-var p$report) (string-append "opened " (coerce-to-string (lexical-value $data)))))

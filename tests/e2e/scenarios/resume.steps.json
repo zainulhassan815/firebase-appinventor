@@ -1,0 +1,10 @@
+[
+  {"install": {}},
+  {"launch": {}},
+  {"wait": {"line": "token .+"}},
+  {"home": {}},
+  {"send": {"notification": {"title": "Background app", "body": "Tap to open"}, "data": {"n": "2"}}},
+  {"notification": {"title": "Background app", "channel": "notifications"}},
+  {"tap": {"text": "Background app"}},
+  {"expect": {"ordered": false, "lines": ["token .+", "opened \\{\"n\":\"2\"\\}"]}}
+]

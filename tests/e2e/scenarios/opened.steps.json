@@ -1,0 +1,11 @@
+[
+  {"install": {}},
+  {"launch": {}},
+  {"wait": {"line": "token .+"}},
+  {"home": {}},
+  {"kill": {}},
+  {"send": {"notification": {"title": "Killed app", "body": "Tap to open"}, "data": {"n": "1"}}},
+  {"notification": {"title": "Killed app", "channel": "notifications", "icon": "RESOURCE"}},
+  {"tap": {"text": "Killed app"}},
+  {"expect": {"ordered": false, "lines": ["token .+", "opened \\{\"n\":\"1\"\\}"]}}
+]

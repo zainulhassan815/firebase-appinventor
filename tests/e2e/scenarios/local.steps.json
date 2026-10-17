@@ -1,0 +1,7 @@
+[
+  {"install": {}},
+  {"launch": {}},
+  {"notification": {"title": "Local title", "channel": "notifications", "icon": "BITMAP"}},
+  {"tap": {"text": "Local title"}},
+  {"expect": {"lines": ["opened \\{\"k\":\"local\"\\}"]}}
+]

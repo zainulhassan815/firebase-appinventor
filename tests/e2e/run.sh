@@ -13,5 +13,5 @@ trap 'rm -f "$screen" "$steps"' EXIT
 render() { python3 -I "$here/render.py" "$secrets/google-services.json"; }
 cat "$here/report.yail" "$here/events.yail" "$scenario" | render > "$screen"
 render < "${scenario%.yail}.steps.json" > "$steps"
-apk=$("$here/build-app.sh" "$name" "$form" "$screen" "$secrets/google-services.json")
-python3 -I "$here/drive.py" "$apk" "$steps" "$secrets/service-account.json"
+apk=$("$here/build-app.sh" "$name" "$form" "$screen" "$secrets/google-services.json" "$here"/assets/*)
+SCREENSHOT=$(dirname "$(dirname "$apk")")/failure.png python3 -I "$here/drive.py" "$apk" "$steps" "$secrets/service-account.json"

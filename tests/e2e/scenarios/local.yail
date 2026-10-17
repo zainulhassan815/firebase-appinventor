@@ -1,0 +1,5 @@
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Messaging1 'ShowNotification (*list-for-runtime* "Local title" "Local body" (make-yail-dictionary (make-dictionary-pair "k" "local"))) '(text text dictionary)))
+
+(define-event Messaging1 NotificationOpened($data)(set-this-form)
+  ((get-var p$report) (string-append "opened " (coerce-to-string (lexical-value $data)))))

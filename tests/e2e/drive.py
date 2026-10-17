@@ -17,8 +17,8 @@ class Failure(Exception):
     pass
 
 
-def adb(*args):
-    return subprocess.run([ADB, *args], capture_output=True, text=True, check=True).stdout
+def adb(*args, check=True):
+    return subprocess.run([ADB, *args], capture_output=True, text=True, check=check).stdout
 
 
 def screen_nodes():
@@ -48,7 +48,7 @@ def until(condition, timeout, what):
     while time.time() < deadline:
         if crashed():
             raise Failure(f'the app crashed while waiting for {what}')
-        if result := condition():
+        if (result := condition()) is not None and result is not False:
             return result
         time.sleep(1)
     raise Failure(f'timed out waiting for {what}')
@@ -69,8 +69,13 @@ class Driver:
     def launch(self):
         adb('shell', 'monkey', '-p', PACKAGE, '-c', 'android.intent.category.LAUNCHER', '1')
 
+    def report(self):
+        lines = report()
+        self.token = next((l[6:] for l in lines if l.startswith('token ')), self.token)
+        return lines
+
     def wait(self, line, timeout=60):
-        until(lambda: any(re.fullmatch(line, l) for l in report()), timeout, f'/{line}/')
+        until(lambda: any(re.fullmatch(line, l) for l in self.report()), timeout, f'/{line}/')
 
     def home(self):
         adb('shell', 'input', 'keyevent', 'KEYCODE_HOME')
@@ -78,34 +83,45 @@ class Driver:
 
     def kill(self):
         adb('shell', 'am', 'kill', PACKAGE)
-        until(lambda: not adb('shell', 'pidof', PACKAGE).strip(), 10, 'the process to stop')
+        until(lambda: not adb('shell', 'pidof', PACKAGE, check=False).strip(), 10, 'the process to stop')
 
     def send(self, topic=None, **message):
-        target = ['topic', topic] if topic else ['token', self._device_token()]
+        target = ['topic', topic] if topic else ['token', self.token]
         subprocess.run([sys.executable, '-I', SEND, self.account, *target, json.dumps(message)],
                        check=True, stdout=subprocess.DEVNULL)
 
     def pause(self, seconds):
         time.sleep(seconds)
 
-    def _device_token(self):
-        self.token = self.token or next(l[6:] for l in report() if l.startswith('token '))
-        return self.token
-
-    def notification(self, title, timeout=30):
-        until(lambda: f'android.title=String ({title})' in adb('shell', 'dumpsys', 'notification', '--noredact'),
-              timeout, f'notification "{title}"')
+    def notification(self, title, channel=None, icon=None, timeout=30):
+        record = until(lambda: next((r for r in adb('shell', 'dumpsys', 'notification', '--noredact')
+                                     .split('NotificationRecord(')
+                                     if f'pkg={PACKAGE}' in r and f'android.title=String ({title})' in r), None),
+                       timeout, f'notification "{title}"')
+        if channel and f'channel={channel} ' not in record:
+            raise Failure(f'notification "{title}" isn\'t on channel {channel}')
+        if icon and f'icon=Icon(typ={icon}' not in record:
+            raise Failure(f'notification "{title}" has no {icon} icon')
 
     def tap(self, text):
         adb('shell', 'cmd', 'statusbar', 'expand-notifications')
+        self.press(text)
+
+    def press(self, text):
         node = until(lambda: next((n for n in screen_nodes() if n.get('text') == text), None), 10, f'"{text}"')
         left, top, right, bottom = map(int, re.findall(r'\d+', node.get('bounds')))
         adb('shell', 'input', 'tap', str((left + right) // 2), str((top + bottom) // 2))
 
-    def expect(self, lines, timeout=30):
+    def expect(self, lines, ordered=True, timeout=30):
+        def matches(actual):
+            if len(actual) != len(lines):
+                return False
+            if ordered:
+                return all(map(re.fullmatch, lines, actual))
+            return all(any(re.fullmatch(line, a) for a in actual) for line in lines)
+
         try:
-            until(lambda: len(report()) == len(lines) and all(map(re.fullmatch, lines, report())), timeout,
-                  'the expected report')
+            until(lambda: matches(self.report()), timeout, 'the expected report')
         except Failure:
             raise Failure('expected:\n' + '\n'.join(lines) + '\ngot:\n' + shown(report()))
 
@@ -127,4 +143,7 @@ if __name__ == '__main__':
     try:
         main(*sys.argv[1:])
     except Failure as failure:
+        if screenshot := os.environ.get('SCREENSHOT'):
+            with open(screenshot, 'wb') as f:
+                f.write(subprocess.run([ADB, 'exec-out', 'screencap', '-p'], capture_output=True).stdout)
         sys.exit(f'FAIL: {failure}')

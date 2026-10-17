@@ -1,0 +1,7 @@
+(define-event Screen1 Initialize()(set-this-form)
+  ((get-var p$report) (string-append "enabled " (coerce-to-string (get-property 'Messaging1 'NotificationsEnabled))))
+  (call-component-method 'Messaging1 'RequestNotificationPermission (*list-for-runtime*) '()))
+
+(define-event Messaging1 NotificationPermissionResult($granted)(set-this-form)
+  ((get-var p$report) (string-append "granted " (coerce-to-string (lexical-value $granted))))
+  ((get-var p$report) (string-append "enabled " (coerce-to-string (get-property 'Messaging1 'NotificationsEnabled)))))

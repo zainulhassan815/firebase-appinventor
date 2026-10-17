@@ -1,0 +1,4 @@
+[
+  {"name": "Messaging1", "type": "FirebaseMessaging", "properties": {"GoogleServicesFile": "google-services.json", "NotificationIcon": "dot.png"}},
+  {"name": "Label1", "type": "Label", "properties": {"Text": ""}}
+]
