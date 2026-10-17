@@ -1,10 +1,16 @@
 package dev.dreamerslab.firebase
 
+import android.Manifest
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import com.google.android.gms.tasks.Task
 import com.google.appinventor.components.annotations.DesignerProperty
 import com.google.appinventor.components.annotations.Extension
+import com.google.appinventor.components.annotations.Options
 import com.google.appinventor.components.annotations.SimpleEvent
 import com.google.appinventor.components.annotations.SimpleFunction
 import com.google.appinventor.components.annotations.SimpleProperty
@@ -13,12 +19,14 @@ import com.google.appinventor.components.runtime.AndroidNonvisibleComponent
 import com.google.appinventor.components.runtime.ComponentContainer
 import com.google.appinventor.components.runtime.EventDispatcher
 import com.google.appinventor.components.runtime.OnDestroyListener
+import com.google.appinventor.components.runtime.OnNewIntentListener
 import com.google.appinventor.components.runtime.OnResumeListener
 import com.google.appinventor.components.runtime.util.ErrorMessages
 import com.google.appinventor.components.runtime.util.MediaUtil
 import com.google.appinventor.components.runtime.util.OnInitializeListener
 import com.google.appinventor.components.runtime.util.YailDictionary
 import com.google.firebase.FirebaseOptions
+import dev.dreamerslab.firebase.helpers.ChannelImportance
 import com.google.firebase.messaging.RemoteMessage
 import com.google.firebase.messaging.FirebaseMessaging as Messaging
 
@@ -29,17 +37,22 @@ import com.google.firebase.messaging.FirebaseMessaging as Messaging
     icon = "icon.png",
 )
 class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleComponent(container.`$form`()),
-    OnInitializeListener, OnResumeListener, OnDestroyListener {
+    OnInitializeListener, OnNewIntentListener, OnResumeListener, OnDestroyListener {
 
     private val main = Handler(Looper.getMainLooper())
+    private val notifications = Notifications(form)
     private val beforeInitialize = mutableListOf<Runnable>()
     private var initialized = false
     private var googleServicesFile = ""
     private var connected = false
+    private var channelName = "Notifications"
+    private var channelImportance = ChannelImportance.Default
+    private var notificationIcon = ""
 
     init {
         active = this
         form.registerForOnInitialize(this)
+        form.registerForOnNewIntent(this)
         form.registerForOnResume(this)
         form.registerForOnDestroy(this)
     }
@@ -92,6 +105,67 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
     fun UnsubscribeFromTopic(topic: String) =
         request("UnsubscribeFromTopic", { messaging().unsubscribeFromTopic(topic) }) { fire { UnsubscribedFromTopic(topic) } }
 
+    @SimpleProperty(description = "The name of the app's notification channel, shown in the app's notification " +
+        "settings. Notifications from ShowNotification and from FCM messages use this channel.")
+    fun ChannelName() = channelName
+
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_STRING, defaultValue = "Notifications")
+    @SimpleProperty
+    fun ChannelName(name: String) {
+        channelName = name
+        if (initialized) createChannel()
+    }
+
+    @SimpleProperty(description = "How the channel's notifications interrupt the user. Android applies it when " +
+        "the channel is first created: after that, only the user can change it, in the app's settings.")
+    @Options(ChannelImportance::class)
+    fun ChannelImportance(): String = channelImportance.toUnderlyingValue()
+
+    @DesignerProperty(
+        editorType = PropertyTypeConstants.PROPERTY_TYPE_CHOICES,
+        editorArgs = ["Min", "Low", "Default", "High"],
+        defaultValue = "Default",
+    )
+    @SimpleProperty
+    fun ChannelImportance(@Options(ChannelImportance::class) importance: String) = attempt("ChannelImportance") {
+        channelImportance = requireNotNull(ChannelImportance.fromUnderlyingValue(importance)) {
+            "Unknown importance: $importance"
+        }
+        if (initialized) createChannel()
+    }
+
+    @SimpleProperty(description = "A media file shown as ShowNotification's icon in the status bar: a white " +
+        "shape on a transparent background. Without one, notifications use the app icon.")
+    fun NotificationIcon() = notificationIcon
+
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_ASSET)
+    @SimpleProperty
+    fun NotificationIcon(path: String) {
+        notificationIcon = path
+    }
+
+    @SimpleProperty(description = "Whether the user allows this app's notifications.")
+    fun NotificationsEnabled() = notifications.enabled
+
+    @SimpleFunction(description = "Asks the user to allow notifications. Android 13 and later need this before " +
+        "any notification shows. NotificationPermissionResult receives the answer.")
+    fun RequestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            form.askPermission(Manifest.permission.POST_NOTIFICATIONS) { _, granted ->
+                fire { NotificationPermissionResult(granted) }
+            }
+        } else {
+            fire { NotificationPermissionResult(notifications.enabled) }
+        }
+    }
+
+    @SimpleFunction(description = "Shows a notification. Tapping it opens the app, and NotificationOpened " +
+        "receives data, a dictionary of text values.")
+    fun ShowNotification(title: String, body: String, data: YailDictionary) = attempt("ShowNotification") {
+        createChannel()
+        notifications.show(title, body, data.entries.associate { (key, value) -> "$key" to "$value" }, icon())
+    }
+
     @SimpleEvent(description = "The registration token GetToken requested.")
     fun GotToken(token: String) {
         EventDispatcher.dispatchEvent(this, "GotToken", token)
@@ -125,6 +199,18 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
         EventDispatcher.dispatchEvent(this, "MessageReceived", from, data, title, body)
     }
 
+    @SimpleEvent(description = "The app was opened by tapping a notification: one Android showed for an FCM " +
+        "message, or one from ShowNotification. data holds the message's data. Put this component on Screen1: " +
+        "notifications open the app's first screen.")
+    fun NotificationOpened(data: YailDictionary) {
+        EventDispatcher.dispatchEvent(this, "NotificationOpened", data)
+    }
+
+    @SimpleEvent(description = "Whether the user allowed notifications.")
+    fun NotificationPermissionResult(granted: Boolean) {
+        EventDispatcher.dispatchEvent(this, "NotificationPermissionResult", granted)
+    }
+
     @SimpleEvent(description = "Firebase deleted messages that waited too long for the device. Fetch the " +
         "latest state from your server.")
     fun DeletedMessages() {
@@ -139,9 +225,13 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
 
     override fun onInitialize() {
         initialized = true
+        createChannel()
+        notificationOpened(form.intent)
         beforeInitialize.forEach(main::post)
         beforeInitialize.clear()
     }
+
+    override fun onNewIntent(intent: Intent) = notificationOpened(intent)
 
     override fun onResume() {
         active = this
@@ -160,6 +250,17 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
     internal fun newToken(token: String) = fire { NewToken(token) }
 
     internal fun deletedMessages() = fire { DeletedMessages() }
+
+    private fun notificationOpened(intent: Intent?) {
+        val data = Notifications.takeOpenedData(intent) ?: return
+        fire { NotificationOpened(YailDictionary.makeDictionary(HashMap<Any, Any>(data))) }
+    }
+
+    private fun createChannel() = notifications.createChannel(channelName, channelImportance.importance())
+
+    private fun icon(): Icon? = notificationIcon.takeIf { it.isNotEmpty() }?.let { path ->
+        Icon.createWithBitmap(MediaUtil.openMedia(form, path).use(BitmapFactory::decodeStream))
+    }
 
     private fun connect(options: FirebaseOptions) {
         FirebaseProject.start(form.applicationContext, options)
