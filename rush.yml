@@ -41,7 +41,7 @@ homepage: https://github.com/zainulhassan815/firebase-appinventor
 
 # Path to the license file of your extension. This should be a path to a local
 # file or link to something hosted online.
-#license: LICENSE.txt
+license: LICENSE
 
 # Where a library from dependencies goes, when Rush's choice doesn't fit:
 # exclude (never resolved), provided (compiled against, not shipped), shared
