@@ -176,8 +176,8 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
         EventDispatcher.dispatchEvent(this, "TokenDeleted")
     }
 
-    @SimpleEvent(description = "Firebase replaced the registration token while the app was open. Send the new " +
-        "one to your server.")
+    @SimpleEvent(description = "Firebase created or replaced the registration token while the app was open, " +
+        "such as on the app's first start. Send it to your server.")
     fun NewToken(token: String) {
         EventDispatcher.dispatchEvent(this, "NewToken", token)
     }
