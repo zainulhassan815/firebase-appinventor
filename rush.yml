@@ -18,9 +18,6 @@ kotlin:
 dependencies:
 - org.jetbrains.kotlin:kotlin-stdlib:2.4.20
 - com.google.firebase:firebase-messaging:26.0.0
-- androidx.datastore:datastore-android:1.1.7
-- androidx.datastore:datastore-core-android:1.1.7
-- androidx.datastore:datastore-preferences-android:1.1.7
 #- example.jar                 # Local JAR or AAR file stored in "deps" directory
 #- com.example:foo-bar:1.2.3   # Coordinate of some remote Maven artifact
 
@@ -48,8 +45,7 @@ license: LICENSE
 # (shipped unchanged as an AAR) or private (relocated into the extension). Keys
 # are <groupId>:<artifactId>, or file names in the "deps" directory.
 libraries:
-  androidx.datastore:datastore: exclude
-  androidx.datastore:datastore-core: exclude
-  androidx.datastore:datastore-preferences: exclude
   androidx.datastore:datastore-core-jvm: exclude
-  androidx.annotation:annotation-jvm: provided
+
+original_names:
+- androidx.datastore.core

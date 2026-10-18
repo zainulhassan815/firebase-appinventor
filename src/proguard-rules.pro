@@ -7,3 +7,6 @@
 -keepnames class * implements com.google.appinventor.components.common.OptionList {
   *;
 }
+
+-dontwarn androidx.annotation.**
+-dontwarn androidx.core.app.PendingIntentCompat

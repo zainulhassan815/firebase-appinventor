@@ -39,9 +39,13 @@ and the limits App Inventor imposes.
   silent, as in standard FCM.
 - Never add blocks that send messages: sending needs the project's service
   account key, which must not ship in an APK.
-- The `libraries:` entries in `rush.yml` work around rush-cli#86 and #87
-  (Kotlin Multiplatform AndroidX artifacts). Remove them once Rush resolves
-  Gradle module metadata.
+- Every library is private (Rush 2.1). DataStore's native code finds
+  `androidx.datastore.core` classes by name, so that package keeps its name
+  (`original_names`). `datastore-core-jvm` is excluded because Rush resolves
+  DataStore in both its JVM and Android forms (rush-cli#87).
+- `-dontwarn androidx.core.app.PendingIntentCompat`: only Play services'
+  error-resolution UI uses it, which this extension never calls. App
+  Inventor's AndroidX core 1.9 lacks it, so calling that UI would crash.
 - The AI Companion can't load the Firebase AARs. Test with the device
   scenarios: `tests/e2e/run.sh tests/e2e/scenarios/<name>.yail`. They need
   `google-services.json` and a Firebase Admin service account key in

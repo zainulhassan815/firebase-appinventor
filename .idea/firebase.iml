@@ -14,15 +14,34 @@
         <orderEntry type="library" name="com.google.firebase:firebase-messaging:26.0.0" level="project" />
         <orderEntry type="library" name="com.google.firebase:firebase-common:23.0.0" level="project" />
         <orderEntry type="library" name="org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2" level="project" />
-        <orderEntry type="library" name="org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.3" level="project" />
-        <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0" level="project" />
-        <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0" level="project" />
+        <orderEntry type="library" name="org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.10.2" level="project" />
         <orderEntry type="library" name="com.google.android.gms:play-services-tasks:18.4.0" level="project" />
         <orderEntry type="library" name="com.google.android.gms:play-services-basement:18.9.0" level="project" />
         <orderEntry type="library" name="com.google.firebase:firebase-components:20.0.0" level="project" />
         <orderEntry type="library" name="com.google.firebase:firebase-annotations:17.0.0" level="project" />
         <orderEntry type="library" name="javax.inject:javax.inject:1" level="project" />
         <orderEntry type="library" name="com.google.errorprone:error_prone_annotations:2.26.0" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-preferences:1.1.7" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore:1.1.7" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-android:1.1.7" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-core:1.1.7" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-core-android:1.1.7" level="project" />
+        <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-parcelize-runtime:1.9.22" level="project" />
+        <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.9.22" level="project" />
+        <orderEntry type="library" name="org.jetbrains.kotlinx:atomicfu-jvm:0.17.0" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-core-okio:1.1.7" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-core-okio-jvm:1.1.7" level="project" />
+        <orderEntry type="library" name="com.squareup.okio:okio-jvm:3.4.0" level="project" />
+        <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0" level="project" />
+        <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0" level="project" />
+        <orderEntry type="library" name="com.squareup.okio:okio:3.4.0" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-preferences-android:1.1.7" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-preferences-core:1.1.7" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-preferences-core-jvm:1.1.7" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-preferences-proto:1.1.7" level="project" />
+        <orderEntry type="library" name="androidx.datastore:datastore-preferences-external-protobuf:1.1.7" level="project" />
+        <orderEntry type="library" name="org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.6.3" level="project" />
+        <orderEntry type="library" name="org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.6.3" level="project" />
         <orderEntry type="library" name="androidx.concurrent:concurrent-futures:1.1.0" level="project" />
         <orderEntry type="library" name="com.google.guava:listenablefuture:1.0" level="project" />
         <orderEntry type="library" name="com.google.firebase:firebase-datatransport:21.0.0" level="project" />
@@ -39,22 +58,5 @@
         <orderEntry type="library" name="com.google.android.gms:play-services-base:18.9.0" level="project" />
         <orderEntry type="library" name="com.google.android.gms:play-services-cloud-messaging:17.4.0" level="project" />
         <orderEntry type="library" name="com.google.android.gms:play-services-stats:17.0.2" level="project" />
-        <orderEntry type="library" name="androidx.datastore:datastore-android:1.1.7" level="project" />
-        <orderEntry type="library" name="androidx.datastore:datastore-core-okio:1.1.7" level="project" />
-        <orderEntry type="library" name="androidx.datastore:datastore-core-okio-jvm:1.1.7" level="project" />
-        <orderEntry type="library" name="com.squareup.okio:okio-jvm:3.4.0" level="project" />
-        <orderEntry type="library" name="com.squareup.okio:okio:3.4.0" level="project" />
-        <orderEntry type="library" name="org.jetbrains.kotlinx:atomicfu-jvm:0.17.0" level="project" />
-        <orderEntry type="library" name="androidx.datastore:datastore-core-android:1.1.7" level="project" />
-        <orderEntry type="library" name="androidx.annotation:annotation-jvm:1.7.0" level="project" />
-        <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-parcelize-runtime:1.9.22" level="project" />
-        <orderEntry type="library" name="org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.9.22" level="project" />
-        <orderEntry type="library" name="androidx.datastore:datastore-preferences-android:1.1.7" level="project" />
-        <orderEntry type="library" name="androidx.datastore:datastore-preferences-core:1.1.7" level="project" />
-        <orderEntry type="library" name="androidx.datastore:datastore-preferences-core-jvm:1.1.7" level="project" />
-        <orderEntry type="library" name="androidx.datastore:datastore-preferences-proto:1.1.7" level="project" />
-        <orderEntry type="library" name="androidx.datastore:datastore-preferences-external-protobuf:1.1.7" level="project" />
-        <orderEntry type="library" name="org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.6.3" level="project" />
-        <orderEntry type="library" name="org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm:1.6.3" level="project" />
     </component>
 </module>
