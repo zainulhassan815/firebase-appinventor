@@ -10,36 +10,31 @@
     width: 1600px; height: 900px; overflow: hidden; position: relative;
     font-family: Inter, sans-serif; color: #fff;
     background:
-      radial-gradient(circle at 520px 330px, rgba(255, 160, 0, .24), transparent 420px),
+      radial-gradient(circle at 520px 330px, rgba(255, 112, 0, .22), transparent 420px),
       radial-gradient(circle at 1065px 330px, rgba(248, 141, 52, .17), transparent 400px),
       radial-gradient(rgba(255, 255, 255, .045) 1px, transparent 1.4px) 0 0 / 24px 24px,
       linear-gradient(160deg, #0d0d10, #0a0a0c 60%, #101012);
   }
   .marks { position: absolute; top: 200px; left: 0; right: 0; height: 260px; display: flex; align-items: center; justify-content: center; gap: 92px; }
-  .bell { width: 230px; filter: drop-shadow(0 0 30px rgba(255, 179, 0, .55)); }
+  .flame { height: 270px; filter: drop-shadow(0 0 30px rgba(255, 145, 0, .5)); }
   .times { width: 56px; height: 56px; position: relative; }
   .times::before, .times::after { content: ""; position: absolute; left: -6px; top: 23px; width: 68px; height: 10px; border-radius: 2px; background: #8d8d90; transform: rotate(45deg); }
   .times::after { transform: rotate(-45deg); }
   .bee { width: 260px; filter: drop-shadow(0 0 26px rgba(248, 141, 52, .55)); }
   h1 { position: absolute; top: 520px; left: 0; right: 0; margin: 0; text-align: center; font-size: 66px; font-weight: 800; letter-spacing: -1.5px; }
-  h1 .firebase { color: #ffb300; }
+  h1 .firebase { color: #ffc400; }
   h1 .ai { color: #f8913a; }
   p { position: absolute; top: 632px; left: 0; right: 0; margin: 0; text-align: center; font-size: 27px; font-weight: 500; color: #a1a1a6; letter-spacing: .2px; }
 </style>
 </head>
 <body>
   <div class="marks">
-    <svg class="bell" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="amber" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#ffd54f"/>
-          <stop offset="1" stop-color="#ff8f00"/>
-        </linearGradient>
-      </defs>
-      <path d="M50 8 C29 8 18 24 18 44 V66 L8 80 Q6 86 12 86 H88 Q94 86 92 80 L82 66 V44 C82 24 71 8 50 8 Z" fill="url(#amber)"/>
-      <path d="M37 92 H63 A13 13 0 0 1 37 92 Z" fill="#ff8f00"/>
-      <circle cx="80" cy="20" r="15" fill="#f4511e" stroke="#0d0d10" stroke-width="5"/>
-    </svg>
+    <svg class="flame" viewBox="70 15 455 565" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M213.918 560.499C237.166 569.856 262.387 575.408 288.87 576.333C324.71 577.585 358.792 570.175 389.261 556.099C352.724 541.744 319.634 520.751 291.392 494.651C273.086 523.961 246.01 547.113 213.918 560.499Z" fill="#FF9100"/>
+<path d="M291.389 494.66C226.923 435.038 187.815 348.743 191.12 254.092C191.228 251.019 191.39 247.947 191.58 244.876C180.034 241.89 167.98 240.068 155.576 239.635C137.821 239.015 120.626 241.217 104.393 245.788C87.1838 275.933 76.7989 310.521 75.5051 347.569C72.1663 443.18 130.027 526.723 213.914 560.508C246.007 547.121 273.082 523.998 291.389 494.66Z" fill="#FFC400"/>
+<path d="M291.39 494.657C306.378 470.671 315.465 442.551 316.523 412.254C319.306 332.559 265.731 264.003 191.581 244.873C191.391 247.944 191.229 251.016 191.121 254.089C187.816 348.74 226.924 435.035 291.39 494.657Z" fill="#FF9100"/>
+<path d="M308.231 20.8584C266 54.6908 232.652 99.302 212.475 150.693C200.924 180.129 193.665 211.748 191.546 244.893C265.696 264.023 319.272 332.579 316.489 412.273C315.431 442.57 306.317 470.663 291.355 494.677C319.595 520.804 352.686 541.77 389.223 556.124C462.56 522.224 514.593 449.278 517.606 362.997C519.558 307.096 498.08 257.273 467.731 215.219C435.68 170.742 308.231 20.8584 308.231 20.8584Z" fill="#DD2C00"/>
+</svg>
     <div class="times"></div>
     <svg class="bee" xmlns="http://www.w3.org/2000/svg" viewBox="24.4 0 50.1 40"><style>.st0{fill:#F88D34}.st1{fill:#A3A3A6}.st2{fill:#FFFFFF}.st3{fill:#92267C}.st4{fill:#A5CF47}.st5{fill:none}</style>
 <g>
@@ -100,6 +95,6 @@
 
   </div>
   <h1><span class="firebase">Firebase</span> for <span class="ai">App Inventor</span></h1>
-  <p>Push notifications · Topics · Local notifications · Works when the app is closed</p>
+  <p>Cloud Messaging · Push notifications · Topics · Local notifications</p>
 </body>
 </html>
