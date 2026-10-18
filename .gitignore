@@ -5,3 +5,4 @@
 /tests/e2e/secrets/
 /.e2e
 __pycache__/
+/tests/e2e/node_modules
