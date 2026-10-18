@@ -1,0 +1,393 @@
+<xml xmlns="https://developers.google.com/blockly/xml">
+  <block type="procedures_defnoreturn" id="pd1" x="0" y="0">
+    <mutation xmlns="http://www.w3.org/1999/xhtml">
+      <arg name="line"></arg>
+    </mutation>
+    <field name="NAME">log</field>
+    <field name="VAR0">line</field>
+    <statement name="STACK">
+      <block type="component_set_get" id="pd6">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="set" property_name="Text" is_generic="false" instance_name="LogLabel"></mutation>
+        <field name="COMPONENT_SELECTOR">LogLabel</field>
+        <field name="PROP">Text</field>
+        <value name="VALUE">
+          <block type="text_join" id="pd5">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="3"></mutation>
+            <value name="ADD0">
+              <block type="lexical_variable_get" id="pd2">
+                <field name="VAR">line</field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="text" id="pd3">
+                <field name="TEXT">\n</field>
+              </block>
+            </value>
+            <value name="ADD2">
+              <block type="component_set_get" id="pd4">
+                <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Label" set_or_get="get" property_name="Text" is_generic="false" instance_name="LogLabel"></mutation>
+                <field name="COMPONENT_SELECTOR">LogLabel</field>
+                <field name="PROP">Text</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd9" x="0" y="145">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Form" is_generic="false" instance_name="Screen1" event_name="Initialize"></mutation>
+    <field name="COMPONENT_SELECTOR">Screen1</field>
+    <statement name="DO">
+      <block type="component_method" id="pd7">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" method_name="RequestNotificationPermission" is_generic="false" instance_name="FirebaseMessaging1"></mutation>
+        <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+        <next>
+          <block type="component_method" id="pd8">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" method_name="GetToken" is_generic="false" instance_name="FirebaseMessaging1"></mutation>
+            <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd14" x="0" y="263">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" is_generic="false" instance_name="FirebaseMessaging1" event_name="GotToken"></mutation>
+    <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+    <statement name="DO">
+      <block type="component_set_get" id="pd11">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" set_or_get="set" property_name="Text" is_generic="false" instance_name="TokenBox"></mutation>
+        <field name="COMPONENT_SELECTOR">TokenBox</field>
+        <field name="PROP">Text</field>
+        <value name="VALUE">
+          <block type="lexical_variable_get" id="pd10">
+            <mutation xmlns="http://www.w3.org/1999/xhtml">
+              <eventparam name="token"></eventparam>
+            </mutation>
+            <field name="VAR">token</field>
+          </block>
+        </value>
+        <next>
+          <block type="procedures_callnoreturn" id="pd13">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" name="log">
+              <arg name="line"></arg>
+            </mutation>
+            <field name="PROCNAME">log</field>
+            <value name="ARG0">
+              <block type="text" id="pd12">
+                <field name="TEXT">Got a token. Copy it to send this phone a message.</field>
+              </block>
+            </value>
+          </block>
+        </next>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd17" x="0" y="435">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" is_generic="false" instance_name="FirebaseMessaging1" event_name="NewToken"></mutation>
+    <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+    <statement name="DO">
+      <block type="component_set_get" id="pd16">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" set_or_get="set" property_name="Text" is_generic="false" instance_name="TokenBox"></mutation>
+        <field name="COMPONENT_SELECTOR">TokenBox</field>
+        <field name="PROP">Text</field>
+        <value name="VALUE">
+          <block type="lexical_variable_get" id="pd15">
+            <mutation xmlns="http://www.w3.org/1999/xhtml">
+              <eventparam name="token"></eventparam>
+            </mutation>
+            <field name="VAR">token</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd20" x="0" y="553">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="SubscribeButton" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">SubscribeButton</field>
+    <statement name="DO">
+      <block type="component_method" id="pd19">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" method_name="SubscribeToTopic" is_generic="false" instance_name="FirebaseMessaging1"></mutation>
+        <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+        <value name="ARG0">
+          <block type="component_set_get" id="pd18">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" set_or_get="get" property_name="Text" is_generic="false" instance_name="TopicBox"></mutation>
+            <field name="COMPONENT_SELECTOR">TopicBox</field>
+            <field name="PROP">Text</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd25" x="0" y="671">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" is_generic="false" instance_name="FirebaseMessaging1" event_name="SubscribedToTopic"></mutation>
+    <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="pd24">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="log">
+          <arg name="line"></arg>
+        </mutation>
+        <field name="PROCNAME">log</field>
+        <value name="ARG0">
+          <block type="text_join" id="pd23">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="text" id="pd21">
+                <field name="TEXT">Subscribed to </field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="lexical_variable_get" id="pd22">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="topic"></eventparam>
+                </mutation>
+                <field name="VAR">topic</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd28" x="0" y="843">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="UnsubscribeButton" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">UnsubscribeButton</field>
+    <statement name="DO">
+      <block type="component_method" id="pd27">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" method_name="UnsubscribeFromTopic" is_generic="false" instance_name="FirebaseMessaging1"></mutation>
+        <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+        <value name="ARG0">
+          <block type="component_set_get" id="pd26">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="TextBox" set_or_get="get" property_name="Text" is_generic="false" instance_name="TopicBox"></mutation>
+            <field name="COMPONENT_SELECTOR">TopicBox</field>
+            <field name="PROP">Text</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd33" x="0" y="961">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" is_generic="false" instance_name="FirebaseMessaging1" event_name="UnsubscribedFromTopic"></mutation>
+    <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="pd32">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="log">
+          <arg name="line"></arg>
+        </mutation>
+        <field name="PROCNAME">log</field>
+        <value name="ARG0">
+          <block type="text_join" id="pd31">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="text" id="pd29">
+                <field name="TEXT">Unsubscribed from </field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="lexical_variable_get" id="pd30">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="topic"></eventparam>
+                </mutation>
+                <field name="VAR">topic</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd42" x="0" y="1133">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" is_generic="false" instance_name="FirebaseMessaging1" event_name="MessageReceived"></mutation>
+    <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="pd41">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="log">
+          <arg name="line"></arg>
+        </mutation>
+        <field name="PROCNAME">log</field>
+        <value name="ARG0">
+          <block type="text_join" id="pd40">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="6"></mutation>
+            <value name="ADD0">
+              <block type="text" id="pd34">
+                <field name="TEXT">Message: </field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="lexical_variable_get" id="pd35">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="title"></eventparam>
+                </mutation>
+                <field name="VAR">title</field>
+              </block>
+            </value>
+            <value name="ADD2">
+              <block type="text" id="pd36">
+                <field name="TEXT"> | </field>
+              </block>
+            </value>
+            <value name="ADD3">
+              <block type="lexical_variable_get" id="pd37">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="body"></eventparam>
+                </mutation>
+                <field name="VAR">body</field>
+              </block>
+            </value>
+            <value name="ADD4">
+              <block type="text" id="pd38">
+                <field name="TEXT"> | </field>
+              </block>
+            </value>
+            <value name="ADD5">
+              <block type="lexical_variable_get" id="pd39">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="data"></eventparam>
+                </mutation>
+                <field name="VAR">data</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd47" x="0" y="1413">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" is_generic="false" instance_name="FirebaseMessaging1" event_name="NotificationOpened"></mutation>
+    <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="pd46">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="log">
+          <arg name="line"></arg>
+        </mutation>
+        <field name="PROCNAME">log</field>
+        <value name="ARG0">
+          <block type="text_join" id="pd45">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="text" id="pd43">
+                <field name="TEXT">Opened from a notification: </field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="lexical_variable_get" id="pd44">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="data"></eventparam>
+                </mutation>
+                <field name="VAR">data</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd55" x="0" y="1585">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="Button" is_generic="false" instance_name="NotifyButton" event_name="Click"></mutation>
+    <field name="COMPONENT_SELECTOR">NotifyButton</field>
+    <statement name="DO">
+      <block type="component_method" id="pd54">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" method_name="ShowNotification" is_generic="false" instance_name="FirebaseMessaging1"></mutation>
+        <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+        <value name="ARG0">
+          <block type="text" id="pd48">
+            <field name="TEXT">Push Demo</field>
+          </block>
+        </value>
+        <value name="ARG1">
+          <block type="text" id="pd49">
+            <field name="TEXT">Tap to open the app</field>
+          </block>
+        </value>
+        <value name="ARG2">
+          <block type="dictionaries_create_with" id="pd53">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="1"></mutation>
+            <value name="ADD0">
+              <block type="pair" id="pd50">
+                <value name="KEY">
+                  <block type="text" id="pd51">
+                    <field name="TEXT">source</field>
+                  </block>
+                </value>
+                <value name="VALUE">
+                  <block type="text" id="pd52">
+                    <field name="TEXT">ShowNotification</field>
+                  </block>
+                </value>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd60" x="0" y="1768">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" is_generic="false" instance_name="FirebaseMessaging1" event_name="NotificationPermissionResult"></mutation>
+    <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="pd59">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="log">
+          <arg name="line"></arg>
+        </mutation>
+        <field name="PROCNAME">log</field>
+        <value name="ARG0">
+          <block type="text_join" id="pd58">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="2"></mutation>
+            <value name="ADD0">
+              <block type="text" id="pd56">
+                <field name="TEXT">Notifications allowed: </field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="lexical_variable_get" id="pd57">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="granted"></eventparam>
+                </mutation>
+                <field name="VAR">granted</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="component_event" id="pd66" x="0" y="1940">
+    <mutation xmlns="http://www.w3.org/1999/xhtml" component_type="FirebaseMessaging" is_generic="false" instance_name="FirebaseMessaging1" event_name="Error"></mutation>
+    <field name="COMPONENT_SELECTOR">FirebaseMessaging1</field>
+    <statement name="DO">
+      <block type="procedures_callnoreturn" id="pd65">
+        <mutation xmlns="http://www.w3.org/1999/xhtml" name="log">
+          <arg name="line"></arg>
+        </mutation>
+        <field name="PROCNAME">log</field>
+        <value name="ARG0">
+          <block type="text_join" id="pd64">
+            <mutation xmlns="http://www.w3.org/1999/xhtml" items="3"></mutation>
+            <value name="ADD0">
+              <block type="lexical_variable_get" id="pd61">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="operation"></eventparam>
+                </mutation>
+                <field name="VAR">operation</field>
+              </block>
+            </value>
+            <value name="ADD1">
+              <block type="text" id="pd62">
+                <field name="TEXT"> failed: </field>
+              </block>
+            </value>
+            <value name="ADD2">
+              <block type="lexical_variable_get" id="pd63">
+                <mutation xmlns="http://www.w3.org/1999/xhtml">
+                  <eventparam name="message"></eventparam>
+                </mutation>
+                <field name="VAR">message</field>
+              </block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <yacodeblocks xmlns="https://appinventor.mit.edu/ns/project/" ya-version="237" language-version="39"></yacodeblocks>
+</xml>

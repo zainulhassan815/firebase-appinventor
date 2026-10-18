@@ -1,0 +1,15 @@
+[
+  {"install": {}},
+  {"launch": {}},
+  {"wait": {"line": "Got a token\\. .*"}},
+  {"press": {"text": "Subscribe"}},
+  {"wait": {"line": "Subscribed to news"}},
+  {"send": {"topic": "news", "notification": {"title": "Hello", "body": "From the test"}, "data": {"n": "1"}}},
+  {"wait": {"line": "Message: Hello \\| From the test \\| \\{\"n\":\"1\"\\}"}},
+  {"press": {"text": "Show a notification"}},
+  {"notification": {"title": "Push Demo", "channel": "notifications"}},
+  {"tap": {"text": "Tap to open the app"}},
+  {"wait": {"line": "Opened from a notification: \\{\"source\":\"ShowNotification\"\\}"}},
+  {"press": {"text": "Unsubscribe"}},
+  {"wait": {"line": "Unsubscribed from news"}}
+]

@@ -8,7 +8,7 @@ import time
 import xml.etree.ElementTree as ET
 
 USAGE = 'usage: drive.py <apk> <steps.json> <service-account.json>'
-PACKAGE = 'dev.dreamerslab.firebase.e2e'
+PACKAGE = os.environ.get('PACKAGE', 'dev.dreamerslab.firebase.e2e')
 ADB = os.environ.get('ADB', os.path.expanduser('~/Android/sdk/platform-tools/adb'))
 SEND = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'send.py')
 
