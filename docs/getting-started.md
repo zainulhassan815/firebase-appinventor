@@ -8,7 +8,7 @@ the phone a push notification from the Firebase console. It takes about ten minu
 1. Open the [Firebase console](https://console.firebase.google.com) and create a
    project. Google Analytics isn't needed.
 2. Add an **Android** app to the project. Any package name works, such as
-   `appinventor.ai_yourname.PushDemo`: the extension doesn't require it to match your
+   `appinventor.ai_yourname.FirebaseDemo`: the extension doesn't require it to match your
    app's.
 3. Download `google-services.json` when the console offers it. Skip the remaining
    steps about Gradle and SDKs: the extension does that part.
@@ -20,10 +20,12 @@ You can download the file again later from Project settings → General → Your
 1. Download `dev.dreamerslab.firebase.aix` from the
    [latest release](https://github.com/zainulhassan815/firebase-appinventor/releases/latest).
 2. In App Inventor, open Palette → Extension → **Import extension** and choose the file.
-3. Drag a **FirebaseMessaging** component onto Screen1. Keep it on Screen1: tapping a
-   notification opens the app's first screen.
-4. Upload `google-services.json` in Media, and select it as the component's
-   `GoogleServicesFile`.
+3. Drag a **Firebase** component onto Screen1. Upload `google-services.json` in Media,
+   and select it as the component's `GoogleServicesFile`. This component connects to
+   your project; the others use it.
+4. Drag a **FirebaseMessaging** component onto Screen1 and set its `Firebase` property
+   to `Firebase1`. Keep it on Screen1: tapping a notification opens the app's first
+   screen.
 
 ## 3. Get the token
 
@@ -32,6 +34,8 @@ to Firebase. Your server sends messages to it.
 
 ![when Screen1.Initialize](images/examples/Screen1-Initialize.png)
 
+The sample's first three blocks load a welcome text with Remote Config; see
+[Remote Config](remote-config.md). For messaging, the last two matter:
 `RequestNotificationPermission` asks the user to allow notifications, which Android 13
 and later require. `GetToken` requests the token, which arrives in `GotToken`:
 
@@ -66,7 +70,10 @@ closed. Tapping it opens the app and fires `NotificationOpened`.
 
 - [Messaging](messaging.md) explains topics, the kinds of messages and what happens in
   each app state, and local notifications.
+- [Remote Config](remote-config.md) changes texts, numbers and switches in your app from
+  the Firebase console.
+- [Connecting](connecting.md) covers the `Firebase` component.
 - [Sending](sending.md) shows how your own server sends messages.
 - [Blocks](blocks.md) lists every block.
-- The `PushDemo.aia` sample in every release has all of this ready to build: upload your
-  `google-services.json` and select it in `FirebaseMessaging1`.
+- The `FirebaseDemo.aia` sample in every release has all of this ready to build: upload
+  your `google-services.json` and select it in `Firebase1`.

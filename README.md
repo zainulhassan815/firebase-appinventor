@@ -13,14 +13,16 @@
   <a href="https://github.com/zainulhassan815/firebase-appinventor/releases/latest">Download</a> ·
   <a href="docs/getting-started.md">Getting started</a> ·
   <a href="docs/messaging.md">Messaging</a> ·
-  <a href="docs/sending.md">Sending</a> ·
+  <a href="docs/remote-config.md">Remote Config</a> ·
   <a href="docs/blocks.md">Blocks</a>
 </p>
 
 A [Firebase](https://firebase.google.com) extension for MIT App Inventor and App Inventor
 based platforms. It brings push notifications to your apps with Firebase Cloud
-Messaging (FCM), which is free: your server, or the Firebase console,
-reaches one phone or every phone that subscribed to a topic, even when the app is closed.
+Messaging (FCM): your server, or the Firebase console, reaches one phone or every phone
+that subscribed to a topic, even when the app is closed. With Remote Config, you change
+texts, numbers and switches in your app from the console, without a new version. Both
+are free.
 
 ## Features
 
@@ -34,8 +36,11 @@ reaches one phone or every phone that subscribed to a topic, even when the app i
 - **Local notifications:** show a notification from the app itself, with your own icon.
 - **Notification settings:** ask for permission on Android 13 and later, and name the
   app's notification channel and choose how it interrupts.
-- **Plain setup:** upload your project's `google-services.json` and select it. Any
-  Android app of your Firebase project works, whatever its package name.
+- **Remote Config:** defaults in the app, values from the console as text, numbers,
+  booleans or JSON, and live updates while the app is open.
+- **Plain setup:** upload your project's `google-services.json` and select it in one
+  `Firebase` component. Any Android app of your Firebase project works, whatever its
+  package name.
 - **Safe by default:** the extension only receives. Sending needs your project's
   secret key, which belongs on a server, never in an app.
 
@@ -46,9 +51,10 @@ reaches one phone or every phone that subscribed to a topic, even when the app i
 2. Download `dev.dreamerslab.firebase.aix` from the
    [latest release](https://github.com/zainulhassan815/firebase-appinventor/releases/latest)
    and import it (Palette → Extension → Import extension).
-3. Add a **FirebaseMessaging** component to Screen1, upload `google-services.json` in
-   Media and select it as `GoogleServicesFile`.
-4. Call `RequestNotificationPermission` and `GetToken` when the screen starts. The token
+3. Add a **Firebase** component to Screen1, upload `google-services.json` in Media and
+   select it as `GoogleServicesFile`.
+4. Add a **FirebaseMessaging** component and set its `Firebase` property to `Firebase1`.
+   Call `RequestNotificationPermission` and `GetToken` when the screen starts. The token
    arrives in `GotToken`.
 5. Build the app, install it, and send it a test message from the console (Messaging →
    new campaign → Firebase Notification messages → Send test message).
@@ -60,14 +66,15 @@ the Companion can't load. Test with an APK build.
 
 ## Sample app
 
-<img src="docs/images/push-demo.png" alt="The Push Demo sample app" width="300" align="right">
+<img src="docs/images/firebase-demo.png" alt="The Firebase Demo sample app" width="300" align="right">
 
-`PushDemo.aia` in every release shows the token, subscribes to a topic, logs every
-message, and shows a local notification. Import it, upload your `google-services.json`,
-select it in `FirebaseMessaging1`, and build.
+`FirebaseDemo.aia` in every release shows a welcome text from Remote Config and the
+token, subscribes to a topic, logs every message, and shows a local notification.
+Import it, upload your `google-services.json`, select it in `Firebase1`, and build.
 
 Copy the token from the app and send it a message from the Firebase console, or send to
-the `news` topic after tapping **Subscribe**.
+the `news` topic after tapping **Subscribe**. Add a `welcome` parameter in Remote Config
+and publish: the text changes while the app is open.
 
 <br clear="right">
 
@@ -87,7 +94,9 @@ each case.
 
 | Component | What it does | Guide |
 |---|---|---|
+| **Firebase** | Connects to your Firebase project. The other components use it. | [Connecting](docs/connecting.md) |
 | **FirebaseMessaging** | Registration tokens, topics, incoming messages, notification taps and local notifications. | [Messaging](docs/messaging.md) |
+| **FirebaseRemoteConfig** | Values from the Firebase console, with defaults and live updates. | [Remote Config](docs/remote-config.md) |
 
 Every block is shown with its description in [Blocks](docs/blocks.md). Each image
 contains its block: drag it into your workspace.
@@ -108,8 +117,8 @@ service account key, and anything inside an app can be extracted. Send from:
 
 **Which devices?** Android 7.0 and newer with Google Play services.
 
-**Does my app's package name have to match the one in Firebase?** No. The component
-uses the Android app in `google-services.json` whose package matches, or else the first
+**Does my app's package name have to match the one in Firebase?** No. The `Firebase`
+component uses the Android app in `google-services.json` whose package matches, or else the first
 one.
 
 **The notification shows, but `MessageReceived` didn't fire.** Android shows
@@ -132,14 +141,14 @@ python3 samples/package.py
 ```
 
 `rush build` writes the extension to `out/dev.dreamerslab.firebase.aix` with its block
-reference, and `samples/package.py` packs the sample into `out/PushDemo.aia`. After
+reference, and `samples/package.py` packs the sample into `out/FirebaseDemo.aia`. After
 changing blocks, render their images and regenerate [docs/blocks.md](docs/blocks.md)
 with `python3 docs/blocks.py`; it fails if a block has no image. GitHub Actions builds
 both on every push, and a tag named after the version in `rush.yml`, like `v1.0.0`,
 publishes a release.
 
 The tests build real App Inventor apps with App Inventor's build server, run them on a
-phone and send them real messages. See [Testing](docs/testing.md).
+phone, send them real messages and publish real Remote Config values. See [Testing](docs/testing.md).
 
 ## License
 

@@ -1,7 +1,8 @@
 # Testing
 
 The tests build real App Inventor apps with App Inventor's build server, run them on an
-Android device, and send them real messages through FCM.
+Android device, send them real messages through FCM, and publish real Remote Config
+values.
 
 ## Setup
 
@@ -23,11 +24,13 @@ Android device, and send them real messages through FCM.
 tests/e2e/run.sh tests/e2e/scenarios/messages.yail
 ```
 
-A scenario is a screen's YAIL with one `FirebaseMessaging` component, `Messaging1`,
-that reports lines into a Label. Its `.steps.json` drives the phone: install, launch,
-press Home, kill the process, send a message, tap a notification, and wait for or
-expect report lines. `@APP_ID@`, `@API_KEY@`, `@PROJECT_ID@` and `@SENDER_ID@` are
-filled in from `google-services.json`. When a step fails, the screenshot is saved in
+A scenario is a screen's YAIL whose components (`Firebase1`, `Messaging1`, and
+`Config1` for Remote Config) report lines into a Label. Its `.steps.json` drives the
+phone: install, launch, press Home, kill the process, send a message, publish Remote
+Config values, tap a notification, and wait for or expect report lines or text on
+screen. `admin.py` sends and publishes with the service account key. `@APP_ID@`,
+`@API_KEY@`, `@PROJECT_ID@` and `@SENDER_ID@` are filled in from
+`google-services.json`. When a step fails, the screenshot is saved in
 `.e2e/<scenario>/failure.png`.
 
 | Scenario | Checks |
@@ -40,6 +43,11 @@ filled in from `google-services.json`. When a step fails, the screenshot is save
 | `resume` | the same for an app in the background |
 | `local` | `ShowNotification` shows a notification with `NotificationIcon`, and tapping it fires `NotificationOpened` |
 | `permission` | `RequestNotificationPermission` shows Android's dialog and reports the answer |
+| `remote-config` | defaults, `FetchAndActivate`, every getter, `Fetch` and `Activate`, and the values after a restart |
+| `live-updates` | a value published while the app is open reaches `ConfigUpdated`, and `Activate` uses it (allows six minutes) |
+
+`remote-config`, `live-updates` and the sample publish their keys (`e2e_*` and `welcome`) to the
+project's Remote Config template. Other parameters in it are kept.
 
 ## The sample
 
@@ -47,10 +55,11 @@ filled in from `google-services.json`. When a step fails, the screenshot is save
 tests/e2e/sample.sh
 ```
 
-Packs `PushDemo.aia`, selects the secret `google-services.json`, compiles the sample's
-blocks to YAIL with App Inventor's own generator (`tests/e2e/blocks/compile.js`), builds
-the APK, and goes through every button: token, subscribe, a topic message, a local
-notification and its tap, unsubscribe.
+Packs `FirebaseDemo.aia`, selects the secret `google-services.json`, compiles the
+sample's blocks to YAIL with App Inventor's own generator (`tests/e2e/blocks/compile.js`),
+builds the APK, and checks the welcome text from Remote Config, its live update, and every
+button: token, subscribe, a topic message, a local notification and its tap,
+unsubscribe.
 
 ## Block images
 
@@ -70,6 +79,6 @@ file. `docs/blocks.py` then writes [Blocks](blocks.md).
 The guides' examples come from the sample:
 
 ```
-node tests/e2e/blocks/images.js <appinventor> samples/push-demo/src/appinventor/ai_dreamerslab/PushDemo/Screen1.{scm,bky} \
+node tests/e2e/blocks/images.js <appinventor> samples/firebase-demo/src/appinventor/ai_dreamerslab/FirebaseDemo/Screen1.{scm,bky} \
   components.json docs/images/examples Screen1.Initialize FirebaseMessaging1.GotToken …
 ```

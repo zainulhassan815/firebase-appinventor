@@ -14,20 +14,8 @@ every phone subscribed to a topic.
 
 ## Connecting
 
-Set `GoogleServicesFile` to your project's `google-services.json`, uploaded in Media. The
-component connects when the screen starts. The file may list several Android apps: the
-component uses the one whose package name matches your app, or else the first one. The
-package name never has to match.
-
-`InitializeApp(applicationId, apiKey, projectId, senderId)` connects without the file,
-for apps that keep these values elsewhere. They're in Project settings → General: the
-app ID (`1:…:android:…`), the Web API key, the project ID and the project number.
-
-An app connects to one Firebase project. Connecting to a second one fails with
-`Firebase is already connected to project …`.
-
-If you restrict your API key in the Google Cloud console to Android apps, its package
-name and signing certificate must match your app's.
+Set the component's `Firebase` property to a `Firebase` component, which connects to
+your project. See [Connecting](connecting.md).
 
 ## Tokens
 
@@ -134,8 +122,8 @@ instead.
 
 ![when FirebaseMessaging1.Error](images/examples/FirebaseMessaging1-Error.png)
 
-Common causes: `GoogleServicesFile` isn't set, the phone is offline, or Google Play
-services is missing or out of date.
+Common causes: the `Firebase` component isn't connected, the phone is offline, or
+Google Play services is missing or out of date.
 
 ## Limits
 
