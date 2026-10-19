@@ -10,13 +10,25 @@ DOCS = os.path.dirname(os.path.abspath(__file__))
 IMAGES = 'images/blocks'
 
 COMPONENTS = [
+    ('Firebase', 'Connecting', 'connecting.md', [
+        ('Connecting', ['GoogleServicesFile', 'InitializeApp', 'ProjectId']),
+        ('Errors', ['Error']),
+    ]),
     ('FirebaseMessaging', 'Messaging', 'messaging.md', [
-        ('Connecting', ['GoogleServicesFile', 'InitializeApp']),
+        ('Project', ['Firebase']),
         ('Token', ['GetToken', 'GotToken', 'NewToken', 'DeleteToken', 'TokenDeleted']),
         ('Topics', ['SubscribeToTopic', 'SubscribedToTopic', 'UnsubscribeFromTopic', 'UnsubscribedFromTopic']),
         ('Messages', ['MessageReceived', 'NotificationOpened', 'DeletedMessages']),
         ('Notifications', ['RequestNotificationPermission', 'NotificationPermissionResult', 'NotificationsEnabled',
                            'ShowNotification', 'ChannelName', 'ChannelImportance', 'NotificationIcon']),
+        ('Errors', ['Error']),
+    ]),
+    ('FirebaseRemoteConfig', 'Remote Config', 'remote-config.md', [
+        ('Project', ['Firebase']),
+        ('Fetching', ['SetDefaults', 'FetchAndActivate', 'Fetch', 'Fetched', 'Activate', 'Activated',
+                      'MinimumFetchInterval']),
+        ('Values', ['GetString', 'GetNumber', 'GetBoolean', 'GetJson', 'GetAll']),
+        ('Live updates', ['ListenForUpdates', 'ConfigUpdated']),
         ('Errors', ['Error']),
     ]),
 ]
@@ -81,7 +93,7 @@ class Reference:
             sys.exit(f'{name}: blocks without a section: {unlisted}. Sections naming no block: {unknown}')
         lines = ['', f'## {name}', '', f'{sentence(plain(component["helpString"]))} Guide: [{guide}]({path}).']
         for title, names in sections:
-            lines += ['', f'### {title}', '', '\n\n'.join(entries[entry] for entry in names)]
+            lines += ['', f'### {name}: {title}', '', '\n\n'.join(entries[entry] for entry in names)]
         return lines
 
     def markdown(self):
@@ -97,7 +109,7 @@ class Reference:
         ]
         for name, _, _, sections in COMPONENTS:
             lines.append(f'- [{name}](#{anchor(name)})')
-            lines += [f'  - [{title}](#{anchor(title)})' for title, _ in sections]
+            lines += [f'  - [{title}](#{anchor(f"{name}: {title}")})' for title, _ in sections]
         lines.append('- [Dropdowns](#dropdowns)')
         for name, guide, path, sections in COMPONENTS:
             lines += self.component(name, guide, path, sections)
