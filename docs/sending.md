@@ -73,12 +73,12 @@ as with the [Supabase extension](https://github.com/zainulhassan815/supabase-app
 
 ## From a computer, for testing
 
-The device tests send with [`tests/e2e/send.py`](../tests/e2e/send.py), which needs
+The device tests send with [`tests/e2e/admin.py`](../tests/e2e/admin.py), which needs
 Python and the `cryptography` package:
 
 ```
-python3 tests/e2e/send.py service-account.json token <token> '{"notification": {"title": "Hi", "body": "Test"}}'
-python3 tests/e2e/send.py service-account.json topic news '{"data": {"n": "1"}}'
+python3 tests/e2e/admin.py service-account.json send token <token> '{"notification": {"title": "Hi", "body": "Test"}}'
+python3 tests/e2e/admin.py service-account.json send topic news '{"data": {"n": "1"}}'
 ```
 
 Never commit the key file.

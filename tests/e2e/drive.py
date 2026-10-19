@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 USAGE = 'usage: drive.py <apk> <steps.json> <service-account.json>'
 PACKAGE = os.environ.get('PACKAGE', 'dev.dreamerslab.firebase.e2e')
 ADB = os.environ.get('ADB', os.path.expanduser('~/Android/sdk/platform-tools/adb'))
-SEND = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'send.py')
+ADMIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'admin.py')
 
 
 class Failure(Exception):
@@ -27,6 +27,10 @@ def screen_nodes():
             return list(ET.fromstring(adb('shell', 'cat', '/sdcard/e2e.xml')).iter('node'))
         time.sleep(1)
     raise Failure('uiautomator dump failed')
+
+
+def find(text, timeout):
+    return until(lambda: next((n for n in screen_nodes() if n.get('text') == text), None), timeout, f'"{text}"')
 
 
 def report():
@@ -87,8 +91,13 @@ class Driver:
 
     def send(self, topic=None, **message):
         target = ['topic', topic] if topic else ['token', self.token]
-        subprocess.run([sys.executable, '-I', SEND, self.account, *target, json.dumps(message)],
-                       check=True, stdout=subprocess.DEVNULL)
+        self.admin('send', *target, json.dumps(message))
+
+    def publish(self, parameters):
+        self.admin('publish', json.dumps(parameters))
+
+    def admin(self, *arguments):
+        subprocess.run([sys.executable, '-I', ADMIN, self.account, *arguments], check=True, stdout=subprocess.DEVNULL)
 
     def pause(self, seconds):
         time.sleep(seconds)
@@ -107,8 +116,11 @@ class Driver:
         adb('shell', 'cmd', 'statusbar', 'expand-notifications')
         self.press(text)
 
+    def see(self, text, timeout=30):
+        find(text, timeout)
+
     def press(self, text):
-        node = until(lambda: next((n for n in screen_nodes() if n.get('text') == text), None), 10, f'"{text}"')
+        node = find(text, 10)
         left, top, right, bottom = map(int, re.findall(r'\d+', node.get('bounds')))
         adb('shell', 'input', 'tap', str((left + right) // 2), str((top + bottom) // 2))
 
