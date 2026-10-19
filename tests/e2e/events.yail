@@ -6,3 +6,6 @@
 
 (define-event Messaging1 Error($operation $message)(set-this-form)
   ((get-var p$report) (string-append "error " (lexical-value $operation) ": " (lexical-value $message))))
+
+(define-event Firebase1 Error($operation $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $operation) ": " (lexical-value $message))))

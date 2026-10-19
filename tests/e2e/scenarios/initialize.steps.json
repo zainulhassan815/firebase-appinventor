@@ -2,7 +2,7 @@
   {"install": {}},
   {"launch": {}},
   {"expect": {"lines": [
-    "error GetToken: Set GoogleServicesFile or call InitializeApp first",
+    "error GetToken: Set the Firebase component's GoogleServicesFile or call its InitializeApp first",
     "error InitializeApp: Firebase is already connected to project @PROJECT_ID@",
     "error SubscribeToTopic: .+",
     "token .+"

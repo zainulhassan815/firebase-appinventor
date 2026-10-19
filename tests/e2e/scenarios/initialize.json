@@ -1,4 +1,5 @@
 [
-  {"name": "Messaging1", "type": "FirebaseMessaging"},
-  {"name": "Label1", "type": "Label", "properties": {"Text": ""}}
+  {"name": "Messaging1", "type": "FirebaseMessaging", "properties": {"Firebase": "@Firebase1"}},
+  {"name": "Label1", "type": "Label", "properties": {"Text": ""}},
+  {"name": "Firebase1", "type": "Firebase"}
 ]

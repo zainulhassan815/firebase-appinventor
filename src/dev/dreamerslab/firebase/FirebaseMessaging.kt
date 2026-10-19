@@ -5,9 +5,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Icon
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import com.google.android.gms.tasks.Task
 import com.google.appinventor.components.annotations.DesignerProperty
 import com.google.appinventor.components.annotations.Extension
 import com.google.appinventor.components.annotations.Options
@@ -21,30 +18,27 @@ import com.google.appinventor.components.runtime.EventDispatcher
 import com.google.appinventor.components.runtime.OnDestroyListener
 import com.google.appinventor.components.runtime.OnNewIntentListener
 import com.google.appinventor.components.runtime.OnResumeListener
-import com.google.appinventor.components.runtime.util.ErrorMessages
 import com.google.appinventor.components.runtime.util.MediaUtil
 import com.google.appinventor.components.runtime.util.OnInitializeListener
 import com.google.appinventor.components.runtime.util.YailDictionary
-import com.google.firebase.FirebaseOptions
-import dev.dreamerslab.firebase.helpers.ChannelImportance
 import com.google.firebase.messaging.RemoteMessage
+import dev.dreamerslab.firebase.helpers.ChannelImportance
 import com.google.firebase.messaging.FirebaseMessaging as Messaging
 
 @Extension(
     description = "Firebase Cloud Messaging: the device's registration token, topics, and the messages sent to " +
-        "this app. Connect it to your Firebase project with GoogleServicesFile or InitializeApp. Send messages " +
-        "from a server, never from the app: sending needs your project's service account key.",
+        "this app. Set its Firebase property to the Firebase component. Send messages from a server, never from " +
+        "the app: sending needs your project's service account key.",
     icon = "icon.png",
 )
 class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleComponent(container.`$form`()),
     OnInitializeListener, OnNewIntentListener, OnResumeListener, OnDestroyListener {
 
-    private val main = Handler(Looper.getMainLooper())
+    private val events = Events(form, this) { operation, message ->
+        EventDispatcher.dispatchEvent(this, "Error", operation, message)
+    }
     private val notifications = Notifications(form)
-    private val beforeInitialize = mutableListOf<Runnable>()
-    private var initialized = false
-    private var googleServicesFile = ""
-    private var connected = false
+    private var firebase: Firebase? = null
     private var channelName = "Notifications"
     private var channelImportance = ChannelImportance.Default
     private var notificationIcon = ""
@@ -57,53 +51,33 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
         form.registerForOnDestroy(this)
     }
 
-    @SimpleProperty(description = "The google-services.json file of your Firebase project, uploaded as a media " +
-        "file. Any Android app of the project works: the app's package name doesn't have to match.")
-    fun GoogleServicesFile() = googleServicesFile
+    @SimpleProperty(description = "The Firebase component that connects to your project.")
+    fun Firebase(): Firebase? = firebase
 
-    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_ASSET)
+    @DesignerProperty(editorType = PropertyTypeConstants.PROPERTY_TYPE_COMPONENT + ":dev.dreamerslab.firebase.Firebase")
     @SimpleProperty
-    fun GoogleServicesFile(path: String) {
-        googleServicesFile = path
-        if (path.isEmpty()) return
-        attempt("GoogleServicesFile") {
-            val json = MediaUtil.openMedia(form, path).bufferedReader().use { it.readText() }
-            connect(FirebaseProject.options(json, form.packageName))
-        }
+    fun Firebase(firebase: Firebase) {
+        this.firebase = firebase
     }
-
-    @SimpleFunction(description = "Connects to a Firebase project without a google-services.json file. The " +
-        "values are in the project settings: the app ID, the Web API key, the project ID and the project number.")
-    fun InitializeApp(applicationId: String, apiKey: String, projectId: String, senderId: String) =
-        attempt("InitializeApp") {
-            connect(
-                FirebaseOptions.Builder()
-                    .setApplicationId(applicationId)
-                    .setApiKey(apiKey)
-                    .setProjectId(projectId)
-                    .setGcmSenderId(senderId)
-                    .build()
-            )
-        }
 
     @Suppress("DEPRECATION")
     @SimpleFunction(description = "Requests the device's registration token. Send it to your server, which uses " +
         "it to send messages to this device. GotToken receives it.")
-    fun GetToken() = request("GetToken", { messaging().token }) { fire { GotToken(it) } }
+    fun GetToken() = events.request("GetToken", { messaging().token }) { events.fire { GotToken(it) } }
 
     @Suppress("DEPRECATION")
     @SimpleFunction(description = "Deletes the registration token, so messages sent to it no longer arrive. " +
         "GetToken creates a new one.")
-    fun DeleteToken() = request("DeleteToken", { messaging().deleteToken() }) { fire { TokenDeleted() } }
+    fun DeleteToken() = events.request("DeleteToken", { messaging().deleteToken() }) { events.fire { TokenDeleted() } }
 
     @SimpleFunction(description = "Subscribes the device to a topic, so it receives the messages sent to it. " +
         "Topic names use letters, digits and -_.~%")
     fun SubscribeToTopic(topic: String) =
-        request("SubscribeToTopic", { messaging().subscribeToTopic(topic) }) { fire { SubscribedToTopic(topic) } }
+        events.request("SubscribeToTopic", { messaging().subscribeToTopic(topic) }) { events.fire { SubscribedToTopic(topic) } }
 
     @SimpleFunction(description = "Unsubscribes the device from a topic.")
     fun UnsubscribeFromTopic(topic: String) =
-        request("UnsubscribeFromTopic", { messaging().unsubscribeFromTopic(topic) }) { fire { UnsubscribedFromTopic(topic) } }
+        events.request("UnsubscribeFromTopic", { messaging().unsubscribeFromTopic(topic) }) { events.fire { UnsubscribedFromTopic(topic) } }
 
     @SimpleProperty(description = "The name of the app's notification channel, shown in the app's notification " +
         "settings. Notifications from ShowNotification and from FCM messages use this channel.")
@@ -113,7 +87,7 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
     @SimpleProperty
     fun ChannelName(name: String) {
         channelName = name
-        if (initialized) createChannel()
+        if (events.initialized) createChannel()
     }
 
     @SimpleProperty(description = "How the channel's notifications interrupt the user. Android applies it when " +
@@ -127,11 +101,11 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
         defaultValue = "Default",
     )
     @SimpleProperty
-    fun ChannelImportance(@Options(ChannelImportance::class) importance: String) = attempt("ChannelImportance") {
+    fun ChannelImportance(@Options(ChannelImportance::class) importance: String) = events.attempt("ChannelImportance") {
         channelImportance = requireNotNull(ChannelImportance.fromUnderlyingValue(importance)) {
             "Unknown importance: $importance"
         }
-        if (initialized) createChannel()
+        if (events.initialized) createChannel()
     }
 
     @SimpleProperty(description = "A media file shown as ShowNotification's icon in the status bar: a white " +
@@ -152,16 +126,16 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
     fun RequestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             form.askPermission(Manifest.permission.POST_NOTIFICATIONS) { _, granted ->
-                fire { NotificationPermissionResult(granted) }
+                events.fire { NotificationPermissionResult(granted) }
             }
         } else {
-            fire { NotificationPermissionResult(notifications.enabled) }
+            events.fire { NotificationPermissionResult(notifications.enabled) }
         }
     }
 
     @SimpleFunction(description = "Shows a notification. Tapping it opens the app, and NotificationOpened " +
         "receives data, a dictionary of text values.")
-    fun ShowNotification(title: String, body: String, data: YailDictionary) = attempt("ShowNotification") {
+    fun ShowNotification(title: String, body: String, data: YailDictionary) = events.attempt("ShowNotification") {
         createChannel()
         notifications.show(title, body, data.entries.associate { (key, value) -> "$key" to "$value" }, icon())
     }
@@ -220,15 +194,12 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
     @SimpleEvent(description = "An operation failed. Without this event, the screen's ErrorOccurred event " +
         "receives the error.")
     fun Error(operation: String, message: String) {
-        reportError(operation, message)
+        EventDispatcher.dispatchEvent(this, "Error", operation, message)
     }
 
     override fun onInitialize() {
-        initialized = true
         createChannel()
         notificationOpened(form.intent)
-        beforeInitialize.forEach(main::post)
-        beforeInitialize.clear()
     }
 
     override fun onNewIntent(intent: Intent) = notificationOpened(intent)
@@ -244,16 +215,16 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
     internal fun messageReceived(message: RemoteMessage) {
         val data = YailDictionary.makeDictionary(HashMap<Any, Any>(message.data))
         val notification = message.notification
-        fire { MessageReceived(message.from.orEmpty(), data, notification?.title.orEmpty(), notification?.body.orEmpty()) }
+        events.fire { MessageReceived(message.from.orEmpty(), data, notification?.title.orEmpty(), notification?.body.orEmpty()) }
     }
 
-    internal fun newToken(token: String) = fire { NewToken(token) }
+    internal fun newToken(token: String) = events.fire { NewToken(token) }
 
-    internal fun deletedMessages() = fire { DeletedMessages() }
+    internal fun deletedMessages() = events.fire { DeletedMessages() }
 
     private fun notificationOpened(intent: Intent?) {
         val data = Notifications.takeOpenedData(intent) ?: return
-        fire { NotificationOpened(YailDictionary.makeDictionary(HashMap<Any, Any>(data))) }
+        events.fire { NotificationOpened(YailDictionary.makeDictionary(HashMap<Any, Any>(data))) }
     }
 
     private fun createChannel() = notifications.createChannel(channelName, channelImportance.importance())
@@ -262,43 +233,9 @@ class FirebaseMessaging(container: ComponentContainer) : AndroidNonvisibleCompon
         Icon.createWithBitmap(MediaUtil.openMedia(form, path).use(BitmapFactory::decodeStream))
     }
 
-    private fun connect(options: FirebaseOptions) {
-        FirebaseProject.start(form.applicationContext, options)
-        connected = true
-    }
-
     private fun messaging(): Messaging {
-        check(connected) { "Set GoogleServicesFile or call InitializeApp first" }
+        checkNotNull(firebase) { "Set the Firebase property" }.requireApp()
         return Messaging.getInstance()
-    }
-
-    private fun <T> request(operation: String, task: () -> Task<T>, done: (T) -> Unit) = attempt(operation) {
-        task().addOnCompleteListener { result ->
-            if (result.isSuccessful) done(result.result)
-            else fail(operation, result.exception?.message ?: "$operation failed")
-        }
-    }
-
-    private fun attempt(operation: String, block: () -> Unit) {
-        try {
-            block()
-        } catch (e: Exception) {
-            fail(operation, e.message ?: e.toString())
-        }
-    }
-
-    private fun fail(operation: String, message: String) = fire { reportError(operation, message) }
-
-    private fun fire(event: Runnable) {
-        main.post {
-            if (initialized) event.run() else beforeInitialize += event
-        }
-    }
-
-    private fun reportError(operation: String, message: String) {
-        if (!EventDispatcher.dispatchEvent(this, "Error", operation, message)) {
-            form.ErrorOccurred(this, operation, ErrorMessages.ERROR_EXTENSION_ERROR, message)
-        }
     }
 
     internal companion object {
