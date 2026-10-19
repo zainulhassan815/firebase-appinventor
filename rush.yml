@@ -18,6 +18,7 @@ kotlin:
 dependencies:
 - org.jetbrains.kotlin:kotlin-stdlib:2.4.20
 - com.google.firebase:firebase-messaging:26.0.0
+- com.google.firebase:firebase-config:24.0.0
 #- example.jar                 # Local JAR or AAR file stored in "deps" directory
 #- com.example:foo-bar:1.2.3   # Coordinate of some remote Maven artifact
 

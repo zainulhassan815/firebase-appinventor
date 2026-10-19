@@ -1,0 +1,7 @@
+[
+  {"name": "Config1", "type": "FirebaseRemoteConfig", "properties": {"Firebase": "@Firebase1", "MinimumFetchInterval": 0}},
+  {"name": "Messaging1", "type": "FirebaseMessaging", "properties": {"Firebase": "@Firebase1"}},
+  {"name": "Label1", "type": "Label", "properties": {"Text": ""}},
+  {"name": "RefreshButton", "type": "Button", "properties": {"Text": "Refresh"}},
+  {"name": "Firebase1", "type": "Firebase", "properties": {"GoogleServicesFile": "google-services.json"}}
+]

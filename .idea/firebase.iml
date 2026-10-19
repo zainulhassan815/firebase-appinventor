@@ -18,7 +18,7 @@
         <orderEntry type="library" name="com.google.android.gms:play-services-tasks:18.4.0" level="project" />
         <orderEntry type="library" name="com.google.android.gms:play-services-basement:18.9.0" level="project" />
         <orderEntry type="library" name="com.google.firebase:firebase-components:20.0.0" level="project" />
-        <orderEntry type="library" name="com.google.firebase:firebase-annotations:17.0.0" level="project" />
+        <orderEntry type="library" name="com.google.firebase:firebase-annotations:18.0.0" level="project" />
         <orderEntry type="library" name="javax.inject:javax.inject:1" level="project" />
         <orderEntry type="library" name="com.google.errorprone:error_prone_annotations:2.26.0" level="project" />
         <orderEntry type="library" name="androidx.datastore:datastore-preferences:1.1.7" level="project" />
@@ -58,5 +58,8 @@
         <orderEntry type="library" name="com.google.android.gms:play-services-base:18.9.0" level="project" />
         <orderEntry type="library" name="com.google.android.gms:play-services-cloud-messaging:17.4.0" level="project" />
         <orderEntry type="library" name="com.google.android.gms:play-services-stats:17.0.2" level="project" />
+        <orderEntry type="library" name="com.google.firebase:firebase-config:24.0.0" level="project" />
+        <orderEntry type="library" name="com.google.firebase:firebase-config-interop:17.0.0" level="project" />
+        <orderEntry type="library" name="com.google.firebase:firebase-abt:24.0.0" level="project" />
     </component>
 </module>

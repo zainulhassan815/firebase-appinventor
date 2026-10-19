@@ -1,0 +1,9 @@
+[
+  {"publish": {"parameters": {"e2e_live": "one"}}},
+  {"install": {}},
+  {"launch": {}},
+  {"wait": {"line": "live one"}},
+  {"publish": {"parameters": {"e2e_live": "two"}}},
+  {"wait": {"line": "live two", "timeout": 360}},
+  {"expect": {"lines": ["live one", "updated \\[\"e2e_live\"\\]", "live two"]}}
+]

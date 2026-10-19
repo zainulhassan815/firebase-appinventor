@@ -1,0 +1,15 @@
+[
+  {"publish": {"parameters": {"e2e_text": "first", "e2e_number": "42", "e2e_flag": "yes", "e2e_json": "{\"a\": [1, 2]}"}}},
+  {"install": {}},
+  {"launch": {}},
+  {"wait": {"line": "bad 0.*"}},
+  {"publish": {"parameters": {"e2e_text": "second", "e2e_number": "42", "e2e_flag": "yes", "e2e_json": "{\"a\": [1, 2]}"}}},
+  {"press": {"text": "Refresh"}},
+  {"wait": {"line": "text second"}},
+  {"expect": {"lines": ["text default text", "number 1", "flag false", "json ", "missing only a default", "activated true", "text first", "number 42", "flag true", "json \\{\"a\":\\[1,2\\]\\}", "missing only a default", "bad 0", "error GetNumber: The value of e2e_text isn't valid: .*", "fetched", "activated true", "text second", "number 42", "flag true", "json \\{\"a\":\\[1,2\\]\\}", "missing only a default", "bad 0", "error GetNumber: The value of e2e_text isn't valid: .*"]}},
+  {"home": {}},
+  {"kill": {}},
+  {"launch": {}},
+  {"wait": {"line": "bad 0"}},
+  {"expect": {"lines": ["text second", "number 42", "flag true", "json \\{\"a\":\\[1,2\\]\\}", "missing only a default", "activated false", "text second", "number 42", "flag true", "json \\{\"a\":\\[1,2\\]\\}", "missing only a default", "bad 0", "error GetNumber: The value of e2e_text isn't valid: .*"]}}
+]

@@ -1,0 +1,12 @@
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Config1 'FetchAndActivate (*list-for-runtime*) '()))
+
+(define-event Config1 Activated($updated)(set-this-form)
+  ((get-var p$report) (string-append "live " (coerce-to-string (call-component-method 'Config1 'GetString (*list-for-runtime* "e2e_live") '(text))))))
+
+(define-event Config1 ConfigUpdated($keys)(set-this-form)
+  ((get-var p$report) (string-append "updated " (coerce-to-string (lexical-value $keys))))
+  (call-component-method 'Config1 'Activate (*list-for-runtime*) '()))
+
+(define-event Config1 Error($operation $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $operation) ": " (lexical-value $message))))

@@ -1,0 +1,33 @@
+(def (p$get method key)
+  (call-component-method 'Config1 method (*list-for-runtime* key) '(text)))
+
+(def (p$values)
+  ((get-var p$report) (string-append "text " (coerce-to-string ((get-var p$get) 'GetString "e2e_text"))))
+  ((get-var p$report) (string-append "number " (coerce-to-string ((get-var p$get) 'GetNumber "e2e_number"))))
+  ((get-var p$report) (string-append "flag " (coerce-to-string ((get-var p$get) 'GetBoolean "e2e_flag"))))
+  ((get-var p$report) (string-append "json " (coerce-to-string ((get-var p$get) 'GetJson "e2e_json"))))
+  ((get-var p$report) (string-append "missing " (coerce-to-string ((get-var p$get) 'GetString "e2e_missing")))))
+
+(define-event Screen1 Initialize()(set-this-form)
+  (call-component-method 'Config1 'SetDefaults (*list-for-runtime* (make-yail-dictionary
+    (make-dictionary-pair "e2e_text" "default text")
+    (make-dictionary-pair "e2e_number" 1)
+    (make-dictionary-pair "e2e_flag" #f)
+    (make-dictionary-pair "e2e_missing" "only a default"))) '(dictionary))
+  ((get-var p$values))
+  (call-component-method 'Config1 'FetchAndActivate (*list-for-runtime*) '()))
+
+(define-event Config1 Activated($updated)(set-this-form)
+  ((get-var p$report) (string-append "activated " (coerce-to-string (lexical-value $updated))))
+  ((get-var p$values))
+  ((get-var p$report) (string-append "bad " (coerce-to-string ((get-var p$get) 'GetNumber "e2e_text")))))
+
+(define-event RefreshButton Click()(set-this-form)
+  (call-component-method 'Config1 'Fetch (*list-for-runtime*) '()))
+
+(define-event Config1 Fetched()(set-this-form)
+  ((get-var p$report) "fetched")
+  (call-component-method 'Config1 'Activate (*list-for-runtime*) '()))
+
+(define-event Config1 Error($operation $message)(set-this-form)
+  ((get-var p$report) (string-append "error " (lexical-value $operation) ": " (lexical-value $message))))
