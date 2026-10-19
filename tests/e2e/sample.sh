@@ -4,14 +4,14 @@ set -euo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 root=$(cd "$here/../.." && pwd)
 secrets=${FIREBASE_SECRETS:-$here/secrets}
-package=appinventor.ai_dreamerslab.PushDemo
+package=appinventor.ai_dreamerslab.FirebaseDemo
 appinventor=$("${RUSH_CLI:-$root/../rush-cli}/tool/e2e/buildserver.sh")
-work=$root/.e2e/push-demo
-screen=$work/project/src/appinventor/ai_dreamerslab/PushDemo
+work=$root/.e2e/firebase-demo
+screen=$work/project/src/appinventor/ai_dreamerslab/FirebaseDemo
 
 (cd "$root" && rush build --no-color >/dev/null && python3 -I samples/package.py)
 rm -rf "$work" && mkdir -p "$work/project/assets"
-unzip -q "$root/out/PushDemo.aia" -d "$work/project"
+unzip -q "$root/out/FirebaseDemo.aia" -d "$work/project"
 cp "$secrets/google-services.json" "$work/project/assets/"
 sed -i 's/"GoogleServicesFile": ""/"GoogleServicesFile": "google-services.json"/' "$screen/Screen1.scm"
 unzip -p "$root/out/dev.dreamerslab.firebase.aix" dev.dreamerslab.firebase/components.json > "$work/components.json"

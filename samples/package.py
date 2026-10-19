@@ -3,7 +3,7 @@ import os
 import sys
 import zipfile
 
-SAMPLE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'push-demo')
+SAMPLE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'firebase-demo')
 PROJECT_FOLDERS = ('youngandroidproject', 'src', 'assets')
 
 
@@ -21,4 +21,4 @@ def package(aix_path, aia_path):
 
 if __name__ == '__main__':
     out = sys.argv[1] if len(sys.argv) > 1 else 'out'
-    package(glob.glob(os.path.join(out, '*.aix'))[0], os.path.join(out, 'PushDemo.aia'))
+    package(glob.glob(os.path.join(out, '*.aix'))[0], os.path.join(out, 'FirebaseDemo.aia'))
